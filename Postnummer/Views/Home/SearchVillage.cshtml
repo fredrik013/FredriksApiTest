@@ -1,0 +1,49 @@
+﻿@model Postnummer.ViewModels.PostalCodeVM
+
+@{
+    ViewData["Title"] = "Sök postnummer";
+}
+
+<h1 class="mt-5 mb-3">Hitta postnummer</h1>
+
+<p class="mb-4">Du kan söka efter postort eller del av postort och få fram tillhörande postnummer.</p>
+
+<form asp-action="SearchVillage" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Search" class="control-label"></label>
+        <input asp-for="Search" class="form-control" />
+        <span asp-validation-for="Search" class="text-danger"></span>
+    </div>
+
+    <div class="form-group my-4">
+        <input type="submit" value="Sök" class="btn btn-primary" />
+    </div>
+</form>
+
+@if (Model.SearchResult != null)
+{
+    @if (Model.SearchResult.Count > 0)
+    {
+        <hr class="my-5" />
+
+        <h4 class="mb-4">
+            Din sökning på '@Model.Search' gav följande @Model.SearchResult.Count träffar:<br />
+        </h4>
+
+        @foreach (var item in Model.SearchResult)
+        {
+            string postCode = item.PostalCode.Insert(3, " ");
+            <pre>@postCode  @item.City.ToUpper()</pre>
+        }
+    }
+}
+else if (Model.SearchResult == null && Model.Search != null)
+{
+    <hr class="my-5" />
+
+    <div>
+        <h4>
+            Din sökning på '@Model.Search' gav inga träffar<br />
+        </h4>
+    </div>
+}
